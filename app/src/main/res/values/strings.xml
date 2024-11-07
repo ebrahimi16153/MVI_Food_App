@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">FoodApp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="headerImage">HeaderImage</string>
+    <string name="search">Search…</string>
+    <string name="emptylist">emptyList</string>
+    <string name="seems_your_connection_lost">Seems your Connection lost :(</string>
+    <string name="foodImage">foodImage</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="measure">Measure</string>
+    <string name="logo">logo</string>
+    <string name="backButton">backButton</string>
+    <string name="source">source</string>
+    <string name="youtubeVideo">youtubeVideo</string>
+    <string name="home">Home</string>
+    <string name="favorite">favorite</string>
+</resources>

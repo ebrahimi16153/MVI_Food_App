@@ -1,0 +1,35 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.FoodApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:statusBarColor">@color/darkSlategray</item>
+    </style>
+
+    <style name="Theme.FoodApp" parent="Base.Theme.FoodApp" />
+
+
+    <style name="RoundedImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">10dp</item>
+    </style>
+
+    <style name="BottomRoundedImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeBottomLeft">70dp</item>
+        <item name="cornerSizeBottomRight">70dp</item>
+    </style>
+
+    <style name="TopRoundedImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">10dp</item>
+        <item name="cornerSizeTopRight">10dp</item>
+    </style>
+
+
+    <!--active indicator fo bottomNavigationBar-->
+    <style name="myActiveIndicator" parent="@style/Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/tartOrange</item>
+    </style>
+
+</resources>

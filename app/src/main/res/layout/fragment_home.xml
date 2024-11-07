@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/whiteSmoke"
+    tools:context=".ui.home.HomeFragment">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <!--header-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/headerLay"
+            android:layout_width="0dp"
+            android:layout_height="350dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.flaviofaria.kenburnsview.KenBurnsView
+                android:id="@+id/headerImg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/headerImage"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/headerShadow"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.5"
+                android:background="@color/darkSlategray"
+                app:layout_constraintBottom_toBottomOf="@id/headerImg"
+                app:layout_constraintEnd_toEndOf="@id/headerImg"
+                app:layout_constraintStart_toStartOf="@id/headerImg"
+                app:layout_constraintTop_toTopOf="@id/headerImg" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!--search & filter-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/searchLay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/headerLay"
+            app:layout_constraintTop_toBottomOf="@id/headerLay">
+
+            <Spinner
+                android:id="@+id/filterSpinner"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginVertical="5dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/bg_circle"
+                android:elevation="3dp"
+                android:overlapAnchor="false"
+                android:popupBackground="@drawable/bg_circle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/searchEdt"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:autofillHints=""
+                android:background="@drawable/bg_circle"
+                android:drawableStart="@drawable/round_search_24"
+                android:elevation="3dp"
+                android:hint="@string/search"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingHorizontal="8dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/charcoal"
+                app:drawableTint="@color/charcoal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/filterSpinner"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!--category-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/categoryLay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchLay">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/categoryRecycler"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingStart="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="RtlSymmetry" />
+
+
+            <!--categoryLoading-->
+            <ProgressBar
+                android:id="@+id/categoryLoading"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!--foods-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/foodsLay"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/categoryLay">
+
+            <!--disconnected or emptyList-->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/foodsRecycler"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingHorizontal="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/disconnectedLay"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <include
+                    android:id="@+id/disconnected"
+                    layout="@layout/disconnected_lay" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ProgressBar
+        android:id="@+id/foodsLoading"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
