@@ -3,32 +3,34 @@ package com.github.ebrahimi16153.mvifoodapp.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.github.ebrahimi16153.mvifoodapp.util.Constant
+import com.github.ebrahimi16153.mvifoodapp.util.Constant.FOOD_TABLE
 import com.google.gson.annotations.SerializedName
+
+
 
 
 data class FoodList(
     @SerializedName("meals")
-    val meals: List<Meal>
+    val meals: List<Meal>?
 ) {
-    @Entity(Constant.FOOD_TABLE)
+    @Entity(tableName = FOOD_TABLE)
     data class Meal(
         @SerializedName("dateModified")
-        val dateModified: String?= "", // null
+        val dateModified: String? = "", // null
         @SerializedName("idMeal")
 
         @PrimaryKey(autoGenerate = false)
-        val idMeal: String, // 52851
+        var idMeal: String, // 52851
         @SerializedName("strArea")
         val strArea: String?, // Indian
         @SerializedName("strCategory")
         val strCategory: String?, // Chicken
         @SerializedName("strCreativeCommonsConfirmed")
-        val strCreativeCommonsConfirmed: String? ="", // null
+        val strCreativeCommonsConfirmed: String? = "", // null
         @SerializedName("strDrinkAlternate")
-        val strDrinkAlternate:String? = "", // null
+        val strDrinkAlternate: String? = "", // null
         @SerializedName("strImageSource")
-        val strImageSource: String? ="", // null
+        val strImageSource: String? = "", // null
         @SerializedName("strIngredient1")
         val strIngredient1: String?, // Red Chilli
         @SerializedName("strIngredient10")
@@ -121,5 +123,35 @@ data class FoodList(
         val strTags: String? = "", // null
         @SerializedName("strYoutube")
         val strYoutube: String? // https://www.youtube.com/watch?v=nSQNfZxOdeU
-    )
+    ) {
+        fun toIngredient(): String {
+            val ingredient =
+                "$strIngredient1\n$strIngredient2\n$strIngredient3\n$strIngredient4\n" +
+                        "$strIngredient5\n$strIngredient6\n$strIngredient7\n$strIngredient8\n" +
+                        "$strIngredient9\n$strIngredient10\n$strIngredient11\n$strIngredient12\n" +
+                        "$strIngredient13\n$strIngredient14\n$strIngredient15\n$strIngredient16\n" +
+                        "$strIngredient17\n$strIngredient18\n$strIngredient19\n$strIngredient20"
+
+            return ingredient.trim().replace("null","").trim().replace("\n+".toRegex(), replacement = "\n")
+        }
+
+
+        fun toMeasure(): String {
+            val measure = "$strMeasure1\n$strMeasure2\n$strMeasure3\n$strMeasure4\n$strMeasure5\n" +
+                    "$strMeasure6\n$strMeasure7\n$strMeasure8\n$strMeasure9\n$strMeasure10\n" +
+                    "$strMeasure11\n$strMeasure12\n$strMeasure14\n$strMeasure15\n$strMeasure16\n" +
+                    "$strMeasure17\n$strMeasure18\n$strMeasure19\n$strMeasure20\n"
+
+
+            return measure.trim().replace("null","").trim().replace("\n+".toRegex(), replacement = "\n")
+
+        }
+
+        fun youtubeKey(): String? {
+            return strYoutube?.split('=')?.get(1)
+        }
+
+    }
+
+
 }

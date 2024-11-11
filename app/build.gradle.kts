@@ -89,5 +89,7 @@ dependencies {
     // image Animation
     implementation("com.flaviofaria:kenburnsview:1.0.7")
 
+    // youtube player
+    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender:0.28")
 
 }

@@ -3,17 +3,22 @@ package com.github.ebrahimi16153.mvifoodapp.view.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.ebrahimi16153.mvifoodapp.data.repository.HomeRepository
+import com.github.ebrahimi16153.mvifoodapp.util.connectivity.ConnectionStatus
+import com.github.ebrahimi16153.mvifoodapp.util.connectivity.ConnectivityImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val homeRepository: HomeRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val homeRepository: HomeRepository,
+    private val connectivity : ConnectivityImpl) : ViewModel() {
 
     val intentChannel = Channel<HomeIntent>()
     private val _state = MutableStateFlow<HomeState>(HomeState.Empty)
@@ -22,6 +27,7 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
 
     init {
         handelState()
+        connectionStatus()
     }
 
 
@@ -50,7 +56,7 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
 
                     in 200..299 -> {
                            if (!response.body()?.meals.isNullOrEmpty())
-                        _state.value = HomeState.RandomMeal(response.body()!!.meals[0])
+                        _state.value = HomeState.RandomMeal(response.body()?.meals!![0])
                         else
                             _state.value = HomeState.Empty
                     }
@@ -109,7 +115,7 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
                 when (response.code()) {
                     in 200..299 -> {
                         if (!response.body()?.meals.isNullOrEmpty())
-                        _state.value = HomeState.Foods(response.body()!!.meals)
+                        _state.value = HomeState.Foods(response.body()?.meals!!)
                         else _state.value = HomeState.Empty
                     }
 
@@ -138,7 +144,7 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
                 when (response.code()) {
                     in 200..299 -> {
                         if (!response.body()?.meals.isNullOrEmpty())
-                        _state.value = HomeState.Foods(response.body()!!.meals)
+                        _state.value = HomeState.Foods(response.body()?.meals!!)
                         else _state.value = HomeState.Empty
                     }
 
@@ -167,7 +173,7 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
                 when(response.code()){
                     in 200..299 -> {
                         if (!response.body()?.meals.isNullOrEmpty())
-                        _state.value = HomeState.Foods(response.body()!!.meals)
+                        _state.value = HomeState.Foods(response.body()?.meals!!)
                         else _state.value = HomeState.Empty
                     }
 
@@ -187,4 +193,26 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
             _state.value = HomeState.Error(e.message.toString())
         }
     }
+
+    private fun connectionStatus() = viewModelScope.launch{
+
+        connectivity.observe().collectLatest {
+            when(it){
+                ConnectionStatus.AVAILABLE -> {
+                    intentChannel.send(HomeIntent.FoodLetters("A"))
+                }
+                ConnectionStatus.UNAVAILABLE -> {
+                    _state.value = HomeState.Error(message = "No Internet Connection")
+                }
+                ConnectionStatus.LOSTING -> {
+                    _state.value = HomeState.Error(message = "No Internet Connection")
+                }
+                ConnectionStatus.LOST -> {
+                    _state.value = HomeState.Error(message = "No Internet Connection")
+                }
+            }
+        }
+    }
+
+
 }

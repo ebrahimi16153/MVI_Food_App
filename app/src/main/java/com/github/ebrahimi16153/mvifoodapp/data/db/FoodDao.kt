@@ -7,32 +7,30 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.github.ebrahimi16153.mvifoodapp.data.model.FoodList
-import com.github.ebrahimi16153.mvifoodapp.util.Constant
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
+import com.github.ebrahimi16153.mvifoodapp.util.Constant.FOOD_TABLE
+import kotlinx.coroutines.flow.Flow
 
 
 @Dao
 interface FoodDao {
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addMeal(meal: FoodList.Meal):Completable
+    suspend fun addMeal(meal: FoodList.Meal)
 
     @Update
-    fun updateMeal(meal: FoodList.Meal):Completable
+    suspend fun updateMeal(meal: FoodList.Meal)
 
     @Delete
-    fun deleteMeal(meal: FoodList.Meal):Completable
+    suspend fun deleteMeal(meal: FoodList.Meal)
 
-    @Query("DELETE FROM ${Constant.FOOD_TABLE}")
+    @Query("DELETE FROM $FOOD_TABLE")
     fun deleteAll()
 
-    @Query("SELECT * FROM ${Constant.FOOD_TABLE}")
-    fun getAllMeal():Observable<List<FoodList.Meal>>
+    @Query("SELECT * FROM $FOOD_TABLE")
+    fun getAllMeal(): Flow<MutableList<FoodList.Meal>>
 
 
-    @Query("SELECT EXISTS (SELECT 1 FROM ${Constant.FOOD_TABLE} WHERE idMeal =:id)")
-    fun foodExists(id:Int):Observable<Boolean>
+    @Query("SELECT EXISTS (SELECT 1 FROM $FOOD_TABLE WHERE idMeal =:id)")
+    fun foodExists(id: String): Flow<Boolean>
 
 
 }
