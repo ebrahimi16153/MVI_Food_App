@@ -49,6 +49,8 @@ class DetailFragment : Fragment() {
     @Inject
     lateinit var detailRepository: DetailRepository
 
+    private var isExist = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -66,15 +68,20 @@ class DetailFragment : Fragment() {
         foodID = args.foodId
         binding.apply {
 
-            lifecycleScope.launch {
-                viewModel.channelIntent.send(DetailIntent.DetailMeal(foodID.toString()))
-                viewModel.channelIntent.send(DetailIntent.ISExist(foodID.toString()))
-            }
-
             //backBtn
             backBtn.setOnClickListener {
                 findNavController().navigateUp()
             }
+
+
+
+            lifecycleScope.launch {
+                viewModel.intentChannel.send(DetailIntent.DetailMeal(foodID.toString()))
+                viewModel.intentChannel.send(DetailIntent.ISExist(foodID.toString()))
+            }
+
+
+
 
             lifecycleScope.launch {
                 //state
@@ -86,46 +93,25 @@ class DetailFragment : Fragment() {
                         is DetailState.Add -> {
                             Toast.makeText(requireContext(), "Added", Toast.LENGTH_SHORT).show()
                         }
+
                         is DetailState.IsExist -> {
-                            val isFav = itDetailState.exist
-                            if (isFav) {
-                                favorite.setColorFilter(
-                                    ContextCompat.getColor(
-                                        requireContext(),
-                                        R.color.red
-                                    ), PorterDuff.Mode.SRC_IN
-                                )
-                                Toast.makeText(requireContext(), "Red", Toast.LENGTH_SHORT).show()
-                            } else {
-                                favorite.setColorFilter(
-                                    ContextCompat.getColor(
-                                        requireContext(),
-                                        R.color.white
-                                    ), PorterDuff.Mode.SRC_IN
-                                )
-                                Toast.makeText(requireContext(), "white", Toast.LENGTH_SHORT).show()
-
-                            }
-
-                            favorite.setOnClickListener {
-                                Toast.makeText(requireContext(), "Red", Toast.LENGTH_SHORT).show()
-                                if (isFav) {
-
-                                    lifecycleScope.launch {
-                                        viewModel.channelIntent.send(DetailIntent.Remove(meal))
-                                    }
-
-                                } else {
-                                    lifecycleScope.launch {
-                                        viewModel.channelIntent.send(DetailIntent.Add(meal))
-                                    }
-                                }
-                            }
+                            isExist = itDetailState.exist
                         }
 
                         is DetailState.Remove -> {
-                            Toast.makeText(requireContext(), "Removed", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), "Removed", Toast.LENGTH_SHORT)
+                                .show()
                         }
+                    }
+                }
+            }
+            //favBtn
+            favorite.setOnClickListener {
+                lifecycleScope.launch {
+                    if (isExist) {
+                        viewModel.intentChannel.send(DetailIntent.Remove(meal))
+                    } else {
+                        viewModel.intentChannel.send(DetailIntent.Add(meal))
                     }
                 }
             }

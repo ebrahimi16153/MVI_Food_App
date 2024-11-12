@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,26 +18,27 @@ class DetailViewModel @Inject constructor(private val detailRepository: DetailRe
     ViewModel() {
 
 
-    val channelIntent = Channel<DetailIntent>()
+    val intentChannel = Channel<DetailIntent>()
     private var _state = MutableStateFlow<DetailState>(DetailState.Loading)
     val state: StateFlow<DetailState> get() = _state
+
 
     init {
         handelState()
     }
 
     private fun handelState() = viewModelScope.launch {
-        channelIntent.consumeAsFlow().collect{ itDetailIntent ->
-            when (itDetailIntent) {
-                is DetailIntent.DetailMeal -> loadDetailMeal(itDetailIntent.id)
-                is DetailIntent.ISExist -> isExist(itDetailIntent.id)
-                is DetailIntent.Add -> addMeal(itDetailIntent.meal)
-                is DetailIntent.Remove -> removeMeal(itDetailIntent.meal)
+        intentChannel.consumeAsFlow().collect {intent ->
+            when (intent) {
+                is DetailIntent.DetailMeal -> loadDetailMeal(intent.id)
+                is DetailIntent.ISExist -> isExist(intent.id)
+                is DetailIntent.Add -> addMeal(intent.meal)
+                is DetailIntent.Remove -> removeMeal(intent.meal)
             }
         }
     }
 
-    private suspend fun loadDetailMeal(id: String) {
+    private fun loadDetailMeal(id: String) = viewModelScope.launch {
         try {
             val response = detailRepository.getDetail(id.toInt())
             if (response.isSuccessful) {
@@ -64,19 +64,32 @@ class DetailViewModel @Inject constructor(private val detailRepository: DetailRe
     }
 
 
-    private suspend fun isExist(id: String) {
-        detailRepository.isExist(id).collect{
+    private fun isExist(id: String) = viewModelScope.launch {
+        detailRepository.isExist(id).collect {
             _state.value = DetailState.IsExist(it)
         }
     }
 
 
     private fun addMeal(meal: FoodList.Meal) = viewModelScope.launch {
-        _state.value = DetailState.Add(detailRepository.addFood(meal))
+
+        _state.value =
+            try {
+
+                DetailState.Add(detailRepository.addFood(meal))
+            } catch (e: Exception) {
+                DetailState.Error(e.message.toString())
+            }
     }
 
-    private fun removeMeal(meal: FoodList.Meal)= viewModelScope.launch {
-        _state.value = DetailState.Add(detailRepository.removeFood(meal))
+    private fun removeMeal(meal: FoodList.Meal) = viewModelScope.launch {
+        _state.value =
+            try {
+
+                DetailState.Remove(detailRepository.removeFood(meal))
+            } catch (e: Exception) {
+                DetailState.Error(e.message.toString())
+            }
     }
 
 }

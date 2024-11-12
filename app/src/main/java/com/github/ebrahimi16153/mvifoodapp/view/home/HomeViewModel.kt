@@ -21,7 +21,7 @@ class HomeViewModel @Inject constructor(
     private val connectivity : ConnectivityImpl) : ViewModel() {
 
     val intentChannel = Channel<HomeIntent>()
-    private val _state = MutableStateFlow<HomeState>(HomeState.Empty)
+    private val _state = MutableStateFlow<HomeState>(HomeState.Loading)
     val state: StateFlow<HomeState> get() = _state
 
 
@@ -46,8 +46,6 @@ class HomeViewModel @Inject constructor(
 
 
     private suspend fun loadRandomMeal() {
-
-        _state.value = HomeState.Loading
 
         try {
             val response = homeRepository.getRandomMeal()
@@ -78,9 +76,6 @@ class HomeViewModel @Inject constructor(
 
 
     private suspend fun loadCategory() {
-
-        _state.value = HomeState.Loading
-
         try {
             val response = homeRepository.getCategory()
             if (response.isSuccessful) {
@@ -107,8 +102,6 @@ class HomeViewModel @Inject constructor(
 
 
     private suspend fun loadFoodByLetter(intent: HomeIntent.FoodLetters) {
-
-        _state.value = HomeState.Loading
         try {
             val response = homeRepository.getFoodsByFirstLetter(intent.letter)
             if (response.isSuccessful) {
@@ -199,7 +192,7 @@ class HomeViewModel @Inject constructor(
         connectivity.observe().collectLatest {
             when(it){
                 ConnectionStatus.AVAILABLE -> {
-                    intentChannel.send(HomeIntent.FoodLetters("A"))
+                    loadFoodByLetter(HomeIntent.FoodLetters("A"))
                 }
                 ConnectionStatus.UNAVAILABLE -> {
                     _state.value = HomeState.Error(message = "No Internet Connection")
