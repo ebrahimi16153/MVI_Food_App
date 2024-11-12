@@ -95,7 +95,7 @@ class DetailFragment : Fragment() {
                         }
 
                         is DetailState.IsExist -> {
-                            isExist = itDetailState.exist
+                            tintOfFavButton(itDetailState)
                         }
 
                         is DetailState.Remove -> {
@@ -118,7 +118,7 @@ class DetailFragment : Fragment() {
         }
     }
 
-    fun error(detailState: DetailState.Error) {
+    private fun error(detailState: DetailState.Error) {
         val message = detailState.message
         binding.apply {
             mainLay.isVisible = false
@@ -131,7 +131,7 @@ class DetailFragment : Fragment() {
     }
 
 
-    fun loadDetail(detailState: DetailState.ShowDetail) {
+    private fun loadDetail(detailState: DetailState.ShowDetail) {
 
         binding.apply {
 
@@ -181,7 +181,24 @@ class DetailFragment : Fragment() {
     }
 
 
-    fun loading() {
+    private fun tintOfFavButton(state: DetailState.IsExist) {
+        isExist = state.exist
+        if (isExist) {
+
+            binding.favorite.setColorFilter(
+                ContextCompat.getColor(requireContext(), R.color.red),
+                PorterDuff.Mode.SRC_IN
+            )
+        } else {
+            binding.favorite.setColorFilter(
+                ContextCompat.getColor(requireContext(), R.color.white),
+                PorterDuff.Mode.SRC_IN
+            )
+        }
+    }
+
+
+    private fun loading() {
         binding.apply {
             mainLay.isVisible = false
             detailLoading.isVisible = true

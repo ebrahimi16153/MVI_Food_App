@@ -132,7 +132,8 @@ data class FoodList(
                         "$strIngredient13\n$strIngredient14\n$strIngredient15\n$strIngredient16\n" +
                         "$strIngredient17\n$strIngredient18\n$strIngredient19\n$strIngredient20"
 
-            return ingredient.trim().replace("null","").trim().replace("\n+".toRegex(), replacement = "\n")
+            return ingredient.trim().replace("null", "").trim()
+                .replace("\n+".toRegex(), replacement = "\n")
         }
 
 
@@ -143,15 +144,20 @@ data class FoodList(
                     "$strMeasure17\n$strMeasure18\n$strMeasure19\n$strMeasure20\n"
 
 
-            return measure.trim().replace("null","").trim().replace("\n+".toRegex(), replacement = "\n")
+            return measure.trim().replace("null", "").trim()
+                .replace("\n+".toRegex(), replacement = "\n")
 
         }
 
         fun youtubeKey(): String? {
-            return strYoutube?.split('=')?.get(1)
+            return try {
+                strYoutube?.split('=')?.get(1)
+            } catch (e: Exception) {
+                ""
+            }
+
+
         }
-
     }
-
 
 }
