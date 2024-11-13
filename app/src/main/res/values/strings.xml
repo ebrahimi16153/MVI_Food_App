@@ -15,4 +15,5 @@
     <string name="youtubeVideo">youtubeVideo</string>
     <string name="home">Home</string>
     <string name="favorite">favorite</string>
+    <string name="emptyFav">First Add Some Food to Favorite</string>
 </resources>
